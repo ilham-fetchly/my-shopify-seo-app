@@ -3,11 +3,12 @@
 client_id = "f4fefdbdb2414c3493d3a862b8319254"
 name = "seo-ilham-pub-app"
 handle = "seo-ilham-pub-app"
-application_url = "https://example.com/"
+application_url = "https://effects-tuition-accordingly-perspective.trycloudflare.com"
 embedded = true
 
 [build]
 include_config_on_deploy = true
+automatically_update_urls_on_dev = true
 
 [webhooks]
 api_version = "2025-04"
@@ -25,7 +26,11 @@ api_version = "2025-04"
 scopes = "read_products,write_products,read_content,write_content,read_themes"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [
+  "https://effects-tuition-accordingly-perspective.trycloudflare.com/auth/callback",
+  "https://effects-tuition-accordingly-perspective.trycloudflare.com/auth/shopify/callback",
+  "https://effects-tuition-accordingly-perspective.trycloudflare.com/api/auth/callback"
+]
 
 [pos]
 embedded = false
