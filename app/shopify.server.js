@@ -183,6 +183,29 @@ export async function updatePageSEO(session, pageId, seoTitle, seoDescription) {
 
 /* ========== BLOG POSTS (ARTICLES) ========== */
 
+export async function getBlogs(session) {
+  const query = `
+    query {
+      blogs(first: 10) {
+        edges {
+          node {
+            id
+            title
+            handle
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await graphqlRequest(session, query);
+  return data.data.blogs.edges.map(({ node }) => ({
+    id: node.id,
+    title: node.title,
+    handle: node.handle,
+  }));
+}
+
 export async function getArticles(session, blogId, first = 10) {
   const query = `
     query getArticles($blogId: ID!, $first: Int!) {
@@ -218,6 +241,44 @@ export async function getArticles(session, blogId, first = 10) {
     seo: node.seo,
     excerpt: node.excerpt,
   }));
+}
+
+export async function updateArticleSEO(
+  session,
+  articleId,
+  seoTitle,
+  seoDescription,
+) {
+  const mutation = `
+    mutation articleUpdate($input: ArticleInput!) {
+      articleUpdate(input: $input) {
+        article {
+          id
+          seo {
+            title
+            description
+          }
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const input = {
+    id: articleId,
+    seo: { title: seoTitle, description: seoDescription },
+  };
+
+  const data = await graphqlRequest(session, mutation, { input });
+
+  if (data.data.articleUpdate.userErrors.length > 0) {
+    throw new Error(data.data.articleUpdate.userErrors[0].message);
+  }
+
+  return data.data.articleUpdate.article;
 }
 
 /* ========== THEMES ========== */
